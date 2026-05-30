@@ -416,7 +416,7 @@ Return ONLY this exact JSON (realistic values for well-known domains, informed e
           <svg width="16" height="16" viewBox="0 0 18 18" fill="none" style={{marginLeft:12,flexShrink:0}}><circle cx="8" cy="8" r="5.5" stroke={T.muted} strokeWidth="1.5"/><path d="M12.5 12.5l3 3" stroke={T.muted} strokeWidth="1.5" strokeLinecap="round"/></svg>
           <span style={{fontSize:13,fontWeight:500,color:T.blueLt,whiteSpace:"nowrap",padding:"0 3px 0 7px",lineHeight:"46px",opacity:.85}}>https://</span>
           <input className="search-input" value={sfx} onChange={e=>setSfx(e.target.value.replace(/^https?:\/\//i,""))} onKeyDown={e=>e.key==="Enter"&&run()} placeholder="yourdomain.com"/>
-          <button className="btn-primary" style={{borderRadius:7,margin:"4px",padding:"9px 18px",fontSize:13,minWidth:96}} disabled={loading} onClick={()=>run()}>
+          <button className="btn-primary" style={{borderRadius:7,margin:"4px",padding:"9px 18px",fontSize:13,minWidth:80}} disabled={loading} onClick={()=>run()}>
             {loading?<span className="spinner"/>:"Run Audit"}
           </button>
         </div>
