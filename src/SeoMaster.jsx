@@ -45,13 +45,29 @@ function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString("en-US",{mon
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 async function apiCall(prompt, sys="You are an SEO expert. Respond ONLY with valid JSON. No markdown. No code fences."){
-  const res = await fetch("/api/audit",{
-  method:"POST", headers:{"Content-Type":"application/json"},
-  body:JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:2000, system:sys, messages:[{role:"user",content:prompt}] }),
-});
-  const d = await res.json();
-  const txt = d.content?.find(c=>c.type==="text")?.text||"";
-  try{ return JSON.parse(txt.replace(/```json|```/g,"").trim()); }catch{ return null; }
+  try {
+    const res = await fetch("/api/audit",{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ system:sys, messages:[{role:"user",content:prompt}] }),
+    });
+    if(!res.ok) throw new Error("API error");
+    const d = await res.json();
+    const txt = d.content?.find(c=>c.type==="text")?.text||"";
+    if(!txt) throw new Error("Empty response");
+    try{ return JSON.parse(txt.replace(/```json|```/g,"").trim()); }catch{ return null; }
+  } catch(e) {
+    // retry once after 2 seconds
+    await new Promise(r => setTimeout(r, 2000));
+    try {
+      const res = await fetch("/api/audit",{
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ system:sys, messages:[{role:"user",content:prompt}] }),
+      });
+      const d = await res.json();
+      const txt = d.content?.find(c=>c.type==="text")?.text||"";
+      try{ return JSON.parse(txt.replace(/```json|```/g,"").trim()); }catch{ return null; }
+    } catch { return null; }
+  }
 }
 
 // ─── Global CSS ───────────────────────────────────────────────────────────────
