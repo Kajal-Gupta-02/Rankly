@@ -372,45 +372,7 @@ function AuditPage({ initUrl }) {
     try{ new URL(u); }catch{ setUE("That doesn't look like a valid URL"); return; }
     setUE(""); setErr(""); setL(true); setData(null); setTab("overview");
     try{
-      const r = await apiCall(`Perform a detailed SEO audit for: ${u}
-
-Return ONLY this exact JSON (realistic values for well-known domains, informed estimates for others):
-{
-  "url":"${u}","title":"string or null","description":"string or null",
-  "ogTitle":"string or null","ogDescription":"string or null","ogImage":"url or null",
-  "twitterCard":"string or null","twitterTitle":"string or null","twitterDescription":"string or null",
-  "feedback":[
-    {"category":"Title","status":"good|warning|error","message":"specific detail"},
-    {"category":"Description","status":"good|warning|error","message":"specific detail"},
-    {"category":"OpenGraph","status":"good|warning|error","message":"specific detail"},
-    {"category":"Twitter","status":"good|warning|error","message":"specific detail"},
-    {"category":"Structure","status":"good|warning|error","message":"specific detail"},
-    {"category":"Images","status":"good|warning|error","message":"specific detail"},
-    {"category":"Schema","status":"good|warning|error","message":"specific detail"},
-    {"category":"Mobile","status":"good|warning|error","message":"specific detail"},
-    {"category":"Performance","status":"good|warning|error","message":"specific detail"}
-  ],
-  "pageSignals":{"wordCount":850,"h1Count":1,"h2Count":5,"h3Count":8,"imageCount":12,"imagesWithAlt":10,"internalLinks":24,"externalLinks":6,"hasCanonical":true,"hasRobotsMeta":true,"hasViewport":true,"hasStructuredData":false,"schemaTypes":[]},
-  "eeat":{"score":65,"grade":"B","experienceScore":60,"expertiseScore":70,"authoritativenessScore":65,"trustScore":65,
-    "signals":[
-      {"name":"Author Information","category":"expertise","present":true,"description":"Named author found"},
-      {"name":"Contact Details","category":"trust","present":true,"description":"Contact page accessible"},
-      {"name":"Privacy Policy","category":"trust","present":true,"description":"Privacy policy linked"},
-      {"name":"HTTPS","category":"trust","present":true,"description":"Site uses HTTPS"},
-      {"name":"External Citations","category":"authoritativeness","present":false,"description":"No external authority links found"},
-      {"name":"About Page","category":"authoritativeness","present":true,"description":"About page present"},
-      {"name":"User Testimonials","category":"experience","present":false,"description":"No reviews or testimonials"},
-      {"name":"In-depth Content","category":"expertise","present":true,"description":"Content exceeds 500 words"},
-      {"name":"Social Profiles","category":"authoritativeness","present":false,"description":"Social links not detected"}
-    ]
-  },
-  "vitals":{"performanceScore":72,"lcp":{"score":65,"value":"3.2s"},"cls":{"score":90,"value":"0.05"},"fcp":{"score":75,"value":"1.8s"},"tbt":{"score":80,"value":"180ms"},
-    "opportunities":[
-      {"title":"Eliminate render-blocking resources","description":"Defer or async-load scripts blocking initial render","savings":0.5},
-      {"title":"Properly size images","description":"Serve images at their display dimensions","savings":0.3}
-    ]
-  }
-}`);
+      const r = await apiCall(`Analyze ${u}. Return JSON: {url,title,description,ogTitle,ogDescription,ogImage,twitterCard,twitterTitle,twitterDescription,feedback:[{category,status,message}],pageSignals:{wordCount,h1Count,h2Count,h3Count,imageCount,imagesWithAlt,internalLinks,externalLinks,hasCanonical,hasRobotsMeta,hasViewport,hasStructuredData,schemaTypes},eeat:{score,grade,experienceScore,expertiseScore,authoritativenessScore,trustScore,signals:[{name,category,present,description}]},vitals:{performanceScore,lcp,cls,fcp,tbt,opportunities}}`);
       if(!r) throw new Error();
       r.healthScore = calcScore(r.feedback);
       setData(r);
